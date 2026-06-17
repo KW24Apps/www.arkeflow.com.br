@@ -122,9 +122,9 @@ html, body {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  column-gap: 16px;
-  row-gap: 30px;
-  padding: 54px 38px 38px 38px;
+  column-gap: 20px;
+  row-gap: 38px;
+  padding: 108px 114px 76px 114px;
   perspective: 1100px;
   opacity: 0;
   transition: opacity 0.6s ease;
