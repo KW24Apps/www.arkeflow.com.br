@@ -1,15 +1,11 @@
 /* ================================================================
    ARKEflow — style.css
-   Full-screen single-view: firefly canvas, block grid, drawer
+   Full-screen: firefly canvas, 3×2 block grid, shared 3D depth
    ================================================================ */
 
 :root {
   --midnight:      #071828;
-  --deep-ocean:    #0D2B45;
-  --ocean-depth:   #1A4F72;
-  --teal-current:  #1B8B9A;
   --electric-cyan: #00C8DC;
-  --sea-foam:      #E8F4F8;
   --steel:         #5B8AA8;
   --mint-green:    #26FF93;
   --font: 'Inter', sans-serif;
@@ -43,7 +39,7 @@ html, body {
   align-items: center;
   justify-content: center;
   background: var(--midnight);
-  transition: opacity 0.6s ease;
+  transition: opacity 0.5s ease;
 }
 #intro.done {
   opacity: 0;
@@ -51,12 +47,12 @@ html, body {
 }
 
 #intro-phrase {
-  font-size: clamp(20px, 3.2vw, 36px);
+  font-size: clamp(15px, 1.9vw, 26px);
   font-weight: 300;
   text-align: center;
-  max-width: 640px;
-  padding: 0 32px;
-  line-height: 1.45;
+  max-width: 780px;
+  padding: 0 40px;
+  line-height: 1.6;
   opacity: 0;
   transform: translateY(14px);
   transition: opacity 0.45s ease, transform 0.45s ease;
@@ -78,21 +74,21 @@ html, body {
   line-height: 1;
 }
 .wm-arke {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 800;
   color: #fff;
   letter-spacing: 0.02em;
 }
 .wm-flow {
-  font-size: 22px;
-  font-weight: 400;
+  font-size: 20px;
+  font-weight: 300;
   color: var(--electric-cyan);
 }
 .wm-sub {
   display: block;
   width: 100%;
-  font-size: 10px;
-  font-weight: 600;
+  font-size: 7px;
+  font-weight: 400;
   letter-spacing: 0.22em;
   color: var(--steel);
   text-transform: uppercase;
@@ -105,64 +101,79 @@ html, body {
   top: 0;
   left: 0;
   right: 0;
-  height: 64px;
-  padding: 16px 24px;
   z-index: 100;
+  padding: 14px 20px;
   display: flex;
   align-items: center;
-  background: linear-gradient(to bottom, rgba(7, 24, 40, 0.88) 0%, transparent 100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+#navbar.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── Grid — shared 3D perspective ───────────────────────────── */
+#grid {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  column-gap: 16px;
+  row-gap: 30px;
+  padding: 54px 38px 38px 38px;
+  perspective: 1100px;
   opacity: 0;
   transition: opacity 0.6s ease;
 }
-#navbar.visible { opacity: 1; }
-
-/* ── Grid ───────────────────────────────────────────────────── */
-#grid {
-  position: fixed;
-  top: 64px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: 1.35fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 3px;
-  padding: 3px;
-  opacity: 0;
-  transition: opacity 0.6s ease, filter 0.35s ease;
-}
 #grid.visible { opacity: 1; }
-#grid.dimmed  { filter: brightness(45%); }
 
 /* ── Blocks ─────────────────────────────────────────────────── */
 .block {
   position: relative;
-  background: rgba(10, 26, 42, 0.82);
-  border: 1px solid rgba(255, 255, 255, 0.045);
-  border-radius: 6px;
+  background: rgba(9, 22, 38, 0.86);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 7px;
   overflow: hidden;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 20px 22px;
-  will-change: transform;
+  padding: 16px 18px;
+  transform: translateZ(0);
+  transition:
+    transform       0.38s cubic-bezier(0.15, 0.85, 0.3, 1),
+    filter          0.35s ease,
+    opacity         0.35s ease,
+    border-color    0.25s ease,
+    box-shadow      0.25s ease;
+  will-change: transform, filter, opacity;
 }
 
-/* inner glow: radial from bottom-left */
+/* transform-origin per grid position — expansion goes toward center */
+.block[data-r="0"][data-c="0"] { transform-origin: top    left;   }
+.block[data-r="0"][data-c="1"] { transform-origin: top    center; }
+.block[data-r="0"][data-c="2"] { transform-origin: top    right;  }
+.block[data-r="1"][data-c="0"] { transform-origin: bottom left;   }
+.block[data-r="1"][data-c="1"] { transform-origin: bottom center; }
+.block[data-r="1"][data-c="2"] { transform-origin: bottom right;  }
+
+/* inner glow — visible on active block */
 .block::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 0% 100%, rgba(0, 200, 220, 0.09) 0%, transparent 60%);
+  background: radial-gradient(circle at 15% 85%, rgba(0, 200, 220, 0.1) 0%, transparent 55%);
   opacity: 0;
   transition: opacity 0.4s ease;
   pointer-events: none;
 }
-.block:hover::before { opacity: 1; }
+.block.is-active::before { opacity: 1; }
 
-/* bottom accent line */
+/* bottom accent line — expands on active block */
 .block::after {
   content: '';
   position: absolute;
@@ -171,169 +182,37 @@ html, body {
   width: 0;
   height: 2px;
   background: linear-gradient(90deg, var(--electric-cyan), var(--mint-green));
-  transition: width 0.4s ease;
+  transition: width 0.38s ease;
   pointer-events: none;
 }
-.block:hover::after { width: 100%; }
+.block.is-active::after { width: 100%; }
 
-/* featured block: col 1 spans both rows */
-.block-featured { grid-row: 1 / 3; }
-
-/* block content sits above pseudo-elements */
+/* block content */
 .block-content {
   position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 7px;
 }
 
-.block-num {
-  display: block;
+.block-cat {
   font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #1B5E70;
-  transition: color 0.3s ease;
-  margin-bottom: 2px;
-}
-.block:hover .block-num { color: var(--electric-cyan); }
-
-.block-title {
-  font-size: 19px;
-  font-weight: 700;
-  color: #fff;
-  line-height: 1.2;
-}
-.block-featured .block-title {
-  font-size: 24px;
-  font-weight: 800;
-}
-
-.block-desc {
-  font-size: 12px;
-  font-weight: 300;
-  color: var(--steel);
-  line-height: 1.65;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 0.35s ease, transform 0.35s ease;
-}
-.block:hover .block-desc {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.block-cta {
-  display: block;
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--electric-cyan);
-  letter-spacing: 0.04em;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 0.35s ease 0.06s, transform 0.35s ease 0.06s;
-}
-.block:hover .block-cta {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ── Dim overlay (click outside to close drawer) ────────────── */
-#grid-dim {
-  position: fixed;
-  top: 64px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 90;
-  pointer-events: none;
-}
-#grid-dim.active {
-  pointer-events: all;
-  cursor: default;
-}
-
-/* ── Bottom drawer ──────────────────────────────────────────── */
-#drawer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 50vh;
-  z-index: 150;
-  background: rgba(10, 23, 40, 0.78);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-top: 1px solid rgba(0, 200, 220, 0.2);
-  transform: translateY(100%);
-  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow-y: auto;
-}
-#drawer.open { transform: translateY(0); }
-
-.drawer-inner {
-  padding: 44px 48px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  max-width: 720px;
-}
-
-#drawer-tag {
-  font-size: 10px;
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--electric-cyan);
+  color: #2A7A8A;
+  margin-bottom: 7px;
 }
-#drawer-title {
-  font-size: 22px;
+.block-title {
+  font-size: 17px;
   font-weight: 700;
   color: #fff;
   line-height: 1.2;
 }
-#drawer-body {
-  font-size: 13px;
-  color: #8AABB5;
-  line-height: 1.7;
-  max-width: 560px;
-}
-
-.drawer-btn {
-  display: inline-block;
-  align-self: flex-start;
-  padding: 11px 24px;
-  border: 1.5px solid var(--electric-cyan);
-  border-radius: 7px;
-  font-size: 13px;
-  font-weight: 600;
-  font-family: var(--font);
-  color: var(--electric-cyan);
-  background: transparent;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background 0.25s ease, color 0.25s ease;
-  margin-top: 4px;
-}
-.drawer-btn:hover {
-  background: var(--electric-cyan);
-  color: var(--midnight);
-}
-
-#drawer-close {
-  position: absolute;
-  top: 16px;
-  right: 20px;
-  background: none;
-  border: none;
+.block-sub {
+  font-size: 11px;
+  font-weight: 300;
   color: var(--steel);
-  font-size: 18px;
-  line-height: 1;
-  cursor: pointer;
-  padding: 6px 10px;
-  font-family: var(--font);
-  transition: color 0.2s ease;
+  margin-top: 5px;
+  line-height: 1.5;
 }
-#drawer-close:hover { color: #fff; }
