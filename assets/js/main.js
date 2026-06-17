@@ -140,13 +140,15 @@
     activeBlock = el;
     var ar = parseInt(el.dataset.r, 10);
     var ac = parseInt(el.dataset.c, 10);
+    var cx = ac === 0 ? 28 : ac === 2 ? -28 : 0;
+    var cy = ar === 0 ? 22 : -22;
 
     blocks.forEach(function (b) {
       b.style.transition = BASE_TRANS;
       if (b === el) {
         b.classList.add('is-active');
         b.classList.remove('is-pushed');
-        b.style.transform   = 'translateZ(50px) scale(1.16)';
+        b.style.transform   = 'translateX(' + cx + 'px) translateY(' + cy + 'px) translateZ(50px) scale(1.16)';
         b.style.borderColor = 'rgba(0,200,220,0.32)';
         b.style.boxShadow   = '0 20px 60px rgba(0,0,0,0.55), inset 0 0 40px rgba(0,200,220,0.04)';
         b.style.filter      = 'brightness(1.1)';
@@ -207,11 +209,16 @@
       var rect = this.getBoundingClientRect();
       var dx = (e.clientX - rect.left  - rect.width  / 2) / (rect.width  / 2);
       var dy = (e.clientY - rect.top   - rect.height / 2) / (rect.height / 2);
+      var mc = parseInt(this.dataset.c, 10);
+      var mr = parseInt(this.dataset.r, 10);
+      var cx = mc === 0 ? 28 : mc === 2 ? -28 : 0;
+      var cy = mr === 0 ? 22 : -22;
       // Disable transform transition during live tracking
       this.style.transition = TILT_TRANS;
       this.style.transform  =
         'rotateX(' + (-dy * 6).toFixed(2) + 'deg)' +
         ' rotateY(' + (dx * 7).toFixed(2) + 'deg)' +
+        ' translateX(' + cx + 'px) translateY(' + cy + 'px)' +
         ' translateZ(50px) scale(1.16)';
     });
 

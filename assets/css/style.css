@@ -153,14 +153,6 @@ html, body {
   will-change: transform, filter, opacity;
 }
 
-/* transform-origin per grid position — expansion goes toward center */
-.block[data-r="0"][data-c="0"] { transform-origin: top    left;   }
-.block[data-r="0"][data-c="1"] { transform-origin: top    center; }
-.block[data-r="0"][data-c="2"] { transform-origin: top    right;  }
-.block[data-r="1"][data-c="0"] { transform-origin: bottom left;   }
-.block[data-r="1"][data-c="1"] { transform-origin: bottom center; }
-.block[data-r="1"][data-c="2"] { transform-origin: bottom right;  }
-
 /* inner glow — visible on active block */
 .block::before {
   content: '';
