@@ -69,6 +69,7 @@ html, body {
   opacity: 0;
   pointer-events: none;
   transform-origin: left top;
+  width: fit-content;
 }
 #intro-logo .wm-arke { font-size: 52px; }
 #intro-logo .wm-flow  { font-size: 52px; }
