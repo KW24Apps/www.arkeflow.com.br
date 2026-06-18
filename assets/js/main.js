@@ -332,8 +332,8 @@
     var logo = getLogoSize();
     var nbr = navbarEl.getBoundingClientRect();
     var exactScale = 20 / 52;
-    var exactTx = (nbr.left + 20) - logo.w * (1 - exactScale) / 2;
-    var exactTy = (nbr.top  + 14) - logo.h * (1 - exactScale) / 2;
+    var exactTx = nbr.left + 20;
+    var exactTy = nbr.top  + 14;
     introLogoEl.style.transition = 'none';
     introLogoEl.style.transform  = 'translate(' + exactTx + 'px,' + exactTy + 'px) scale(' + exactScale + ')';
     introLogoEl.style.opacity    = '1';
@@ -377,8 +377,8 @@
     hidePhrase(phraseA, PHRASES[2]);
 
     var logo = getLogoSize();
-    var centerTx = W / 2 - logo.w / 2;
-    var centerTy = H / 2 - logo.h / 2;
+    var centerTx = (window.innerWidth  - logo.w) / 2;
+    var centerTy = (window.innerHeight - logo.h) / 2;
 
     introLogoEl.style.transition = 'none';
     introLogoEl.style.opacity    = '0';
@@ -395,8 +395,8 @@
     // ── Logo slides to navbar position and stays permanently
     var nbr = navbarEl.getBoundingClientRect();
     var exactScale = 20 / 52;
-    var exactTx = (nbr.left + 20) - logo.w * (1 - exactScale) / 2;
-    var exactTy = (nbr.top  + 14) - logo.h * (1 - exactScale) / 2;
+    var exactTx = nbr.left + 20;
+    var exactTy = nbr.top  + 14;
     introLogoEl.style.transition = 'transform 900ms ' + EASE_LOGO_OUT;
     introLogoEl.style.transform  = 'translate(' + exactTx + 'px,' + exactTy + 'px) scale(' + exactScale + ')';
 
