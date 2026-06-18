@@ -421,6 +421,7 @@
   runIntro();
 
   // ── Block grid: expand/push 3D interaction ───────────────────
+  var isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
   var blocks = document.querySelectorAll('.block');
 
   // CSS transition used during enter/leave (includes transform)
@@ -537,11 +538,22 @@
 
     // Next frame: CSS transition applies, animate block to center
     requestAnimationFrame(function () {
-      var tw = Math.min(1060, window.innerWidth  - 280);
-      var th = Math.min(660,  window.innerHeight - 240);
+      var isMobile = window.innerWidth <= 767;
+      var tw, th, expandTop, expandLeft;
+      if (isMobile) {
+        tw          = window.innerWidth  - 32;
+        th          = window.innerHeight - 80;
+        expandTop   = 60;
+        expandLeft  = 16;
+      } else {
+        tw          = Math.min(1060, window.innerWidth  - 280);
+        th          = Math.min(660,  window.innerHeight - 240);
+        expandTop   = (window.innerHeight - th) / 2;
+        expandLeft  = (window.innerWidth  - tw) / 2;
+      }
       el.classList.add('is-expanded');
-      el.style.top    = ((window.innerHeight - th) / 2) + 'px';
-      el.style.left   = ((window.innerWidth  - tw) / 2) + 'px';
+      el.style.top    = expandTop  + 'px';
+      el.style.left   = expandLeft + 'px';
       el.style.width  = tw + 'px';
       el.style.height = th + 'px';
       blocks.forEach(function (b) {
@@ -596,6 +608,7 @@
     });
 
     block.addEventListener('mousemove', function (e) {
+      if (isTouch) return;
       if (gridEl.classList.contains('is-expanded-open')) return;
       if (activeBlock !== this) return;
       var rect = this.getBoundingClientRect();

@@ -16,6 +16,7 @@
 html, body {
   height: 100%;
   overflow: hidden;
+  overscroll-behavior: none;
   font-family: var(--font);
   background: var(--midnight);
   color: #fff;
@@ -512,4 +513,55 @@ a.ce-contact-item:hover .ce-ci-value { color: var(--electric-cyan); }
   font-weight: 300;
   color: var(--mint-green);
   line-height: 1.7;
+}
+
+/* ── Mobile (portrait phones + narrow tablets) ──────────────── */
+@media (max-width: 767px) {
+
+  #grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(3, 1fr);
+    padding: 64px 12px 70px 12px;
+    column-gap: 10px;
+    row-gap: 10px;
+  }
+
+  /* transform-origin per visual cell in 2-col layout
+     #expand-backdrop is nth-child(1); blocks start at nth-child(2) */
+  .block:nth-child(2) { transform-origin: top left; }
+  .block:nth-child(3) { transform-origin: top right; }
+  .block:nth-child(4) { transform-origin: center left; }
+  .block:nth-child(5) { transform-origin: center right; }
+  .block:nth-child(6) { transform-origin: bottom left; }
+  .block:nth-child(7) { transform-origin: bottom right; }
+
+  .block        { padding: 12px 14px; }
+  .block-title  { font-size: 15px; }
+  .block-sub    { font-size: 10px; }
+
+  .block:not(.is-expanded):active {
+    transform: scale(0.96) translateZ(-8px) !important;
+    transition: transform 0.1s ease !important;
+  }
+
+  .block.is-expanded {
+    top:    60px !important;
+    left:   16px !important;
+    width:  calc(100vw - 32px) !important;
+    height: calc(100vh - 80px) !important;
+  }
+
+  .contact-expanded { flex-direction: column; }
+  .ce-left {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 20px 18px;
+  }
+  .ce-right { padding: 20px 18px; }
+
+  .intro-phrase { font-size: clamp(18px, 5vw, 28px); }
+
+  #skip-wrap { bottom: 16px; right: 16px; }
+
 }
