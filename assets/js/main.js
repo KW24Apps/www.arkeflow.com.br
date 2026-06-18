@@ -586,7 +586,10 @@
     }, 430);
   }
 
-  backdrop.addEventListener('click', closeExpanded);
+  backdrop.addEventListener('click', function (e) {
+    if (e.target !== backdrop) return;
+    closeExpanded();
+  });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') closeExpanded();
   });
