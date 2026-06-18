@@ -581,12 +581,7 @@
   }
 
   backdrop.addEventListener('click', function (e) {
-    if (expandedBlock) {
-      if (expandedBlock.contains(e.target)) return;
-      var r = expandedBlock.getBoundingClientRect();
-      if (e.clientX >= r.left && e.clientX <= r.right &&
-          e.clientY >= r.top  && e.clientY <= r.bottom) return;
-    }
+    if (expandedBlock && expandedBlock.contains(e.target)) return;
     closeExpanded();
   });
   document.addEventListener('keydown', function (e) {
