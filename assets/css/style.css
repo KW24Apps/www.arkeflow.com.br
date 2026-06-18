@@ -46,24 +46,49 @@ html, body {
   pointer-events: none;
 }
 
-#intro-phrase {
-  font-size: clamp(15px, 1.9vw, 26px);
+.intro-phrase {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(20px, 2.6vw, 38px);
   font-weight: 300;
   text-align: center;
-  max-width: 780px;
   padding: 0 40px;
   line-height: 1.6;
   opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 0.45s ease, transform 0.45s ease;
+  pointer-events: none;
 }
-#intro-phrase.entering {
-  opacity: 1;
-  transform: translateY(0);
-}
-#intro-phrase.exiting {
+
+#intro-logo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 205;
   opacity: 0;
-  transform: translateY(-14px);
+  pointer-events: none;
+}
+
+#skip-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 210;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3px;
+  padding: 6px;
+  cursor: pointer;
+  opacity: 0.28;
+  transition: opacity 0.2s ease;
+}
+#skip-btn:hover { opacity: 0.75; }
+.skip-sq {
+  width: 9px;
+  height: 9px;
+  border: 1px solid rgba(0, 200, 220, 0.85);
+  border-radius: 1px;
 }
 
 /* ── Wordmark ───────────────────────────────────────────────── */
@@ -161,17 +186,23 @@ html, body {
 .block[data-r="1"][data-c="1"] { transform-origin: bottom center; }
 .block[data-r="1"][data-c="2"] { transform-origin: bottom right;  }
 
-/* inner glow — visible on active block */
+/* inner glow — visible on active block, origin toward grid center */
 .block::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 15% 85%, rgba(0, 200, 220, 0.1) 0%, transparent 55%);
   opacity: 0;
   transition: opacity 0.4s ease;
   pointer-events: none;
 }
 .block.is-active::before { opacity: 1; }
+
+.block[data-r="0"][data-c="0"]::before { background: radial-gradient(circle at 85% 85%, rgba(0, 200, 220, 0.10) 0%, transparent 55%); }
+.block[data-r="0"][data-c="1"]::before { background: radial-gradient(circle at 50% 85%, rgba(0, 200, 220, 0.10) 0%, transparent 55%); }
+.block[data-r="0"][data-c="2"]::before { background: radial-gradient(circle at 15% 85%, rgba(0, 200, 220, 0.10) 0%, transparent 55%); }
+.block[data-r="1"][data-c="0"]::before { background: radial-gradient(circle at 85% 15%, rgba(0, 200, 220, 0.10) 0%, transparent 55%); }
+.block[data-r="1"][data-c="1"]::before { background: radial-gradient(circle at 50% 15%, rgba(0, 200, 220, 0.10) 0%, transparent 55%); }
+.block[data-r="1"][data-c="2"]::before { background: radial-gradient(circle at 15% 15%, rgba(0, 200, 220, 0.10) 0%, transparent 55%); }
 
 /* bottom accent line — expands on active block */
 .block::after {

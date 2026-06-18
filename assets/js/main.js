@@ -206,47 +206,203 @@
   }
   requestAnimationFrame(drawFrame);
 
-  // ── Intro sequence (precise timestamp-based timing) ──────────
-  var introEl  = document.getElementById('intro');
-  var phraseEl = document.getElementById('intro-phrase');
-  var navbarEl = document.getElementById('navbar');
-  var gridEl   = document.getElementById('grid');
+  // ── Intro sequence ───────────────────────────────────────────
+  var introEl     = document.getElementById('intro');
+  var phraseA     = document.getElementById('intro-phrase-a');
+  var phraseB     = document.getElementById('intro-phrase-b');
+  var introLogoEl = document.getElementById('intro-logo');
+  var skipBtn     = document.getElementById('skip-btn');
+  var navbarEl    = document.getElementById('navbar');
+  var gridEl      = document.getElementById('grid');
 
   var P1 = 'Quando o negócio cresce, o improviso para de funcionar.';
   var P2 = 'Processo dependente de pessoa. Decisão sem dado. Equipe sem visibilidade.';
   var P3 = 'A ARKEflow constrói a estrutura que o seu negócio precisa para escalar.';
 
-  function wait(ms) {
-    return new Promise(function (resolve) { setTimeout(resolve, ms); });
+  var PHRASES = [
+    { text: P1, color: '#ffffff', from: [ 65, -40], to: [-65,  40] },
+    { text: P2, color: '#00C8DC', from: [-60,  50], to: [ 60, -50] },
+    { text: P3, color: '#ffffff', from: [  0,  65], to: [  0, -65] }
+  ];
+
+  var TRANS_DUR    = 700;
+  var HOLD_TIME    = 4500;
+  var EASE_PHRASE  = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+  var EASE_LOGO_IN = 'cubic-bezier(0.34, 1.3, 0.64, 1)';
+  var EASE_LOGO_OUT= 'cubic-bezier(0.4, 0, 0.2, 1)';
+  var EASE_BLOCK   = 'cubic-bezier(0.34, 1.2, 0.64, 1)';
+
+  var skipped = false;
+  var skipResolvers = [];
+
+  function safeWait(ms) {
+    if (skipped) return Promise.resolve();
+    return new Promise(function (resolve) {
+      var tid = setTimeout(resolve, ms);
+      skipResolvers.push(function () { clearTimeout(tid); resolve(); });
+    });
   }
 
-  function enterPhrase(text, color) {
-    phraseEl.textContent = text;
-    phraseEl.style.color = color;
-    phraseEl.classList.remove('entering', 'exiting');
-    phraseEl.getBoundingClientRect(); // force reflow → reset to base state
-    phraseEl.classList.add('entering');
+  function setPhraseState(el, tx, ty, opacity, animate) {
+    el.style.transition = animate
+      ? ('transform ' + TRANS_DUR + 'ms ' + EASE_PHRASE +
+         ', opacity ' + TRANS_DUR + 'ms ' + EASE_PHRASE)
+      : 'none';
+    el.style.transform = 'translate(' + tx + 'px, ' + ty + 'px)';
+    el.style.opacity   = String(opacity);
   }
 
-  function exitPhrase() {
-    phraseEl.classList.remove('entering');
-    phraseEl.classList.add('exiting');
+  function showPhrase(el, ph) {
+    el.textContent = ph.text;
+    el.style.color = ph.color;
+    setPhraseState(el, ph.from[0], ph.from[1], 0, false);
+    el.getBoundingClientRect(); // force reflow
+    setPhraseState(el, 0, 0, 1, true);
   }
+
+  function hidePhrase(el, ph) {
+    setPhraseState(el, ph.to[0], ph.to[1], 0, true);
+  }
+
+  function getLogoSize() {
+    return { w: introLogoEl.offsetWidth, h: introLogoEl.offsetHeight };
+  }
+
+  function triggerBlockExpansion() {
+    var blks = document.querySelectorAll('.block');
+    var skipR = skipBtn.getBoundingClientRect();
+    var skipCx = skipR.left + skipR.width  / 2;
+    var skipCy = skipR.top  + skipR.height / 2;
+
+    // Grid container: make visible immediately, no fade
+    gridEl.style.transition = 'none';
+    gridEl.style.opacity    = '1';
+
+    // Collapse each block to skip-button position
+    blks.forEach(function (b) {
+      var r  = b.getBoundingClientRect();
+      var dx = skipCx - (r.left + r.width  / 2);
+      var dy = skipCy - (r.top  + r.height / 2);
+      var sx = 9 / r.width;
+      var sy = 9 / r.height;
+      b.style.transition = 'none';
+      b.style.transform  = 'translate(' + dx + 'px,' + dy + 'px) scale(' + sx + ',' + sy + ')';
+      b.style.opacity    = '0';
+    });
+
+    // Fade out skip button
+    skipBtn.style.transition    = 'opacity 0.3s ease';
+    skipBtn.style.opacity       = '0';
+    skipBtn.style.pointerEvents = 'none';
+
+    // Stagger blocks from top-left to bottom-right
+    blks.forEach(function (b, i) {
+      setTimeout(function () {
+        b.style.transition = 'transform 750ms ' + EASE_BLOCK + ', opacity 750ms ease';
+        b.style.transform  = 'translate(0,0) scale(1,1)';
+        b.style.opacity    = '1';
+      }, i * 55);
+    });
+
+    // Cleanup after last block settles
+    var cleanupDelay = (blks.length - 1) * 55 + 750 + 60;
+    setTimeout(function () {
+      gridEl.style.transition = '';
+      gridEl.style.opacity    = '';
+      gridEl.classList.add('visible');
+      blks.forEach(function (b) {
+        b.style.transition = '';
+        b.style.transform  = '';
+        b.style.opacity    = '';
+      });
+      introLogoEl.style.transition    = 'opacity 0.25s ease';
+      introLogoEl.style.opacity       = '0';
+      introLogoEl.style.pointerEvents = 'none';
+    }, cleanupDelay);
+  }
+
+  function finishIntro() {
+    // Hide phrases instantly
+    [phraseA, phraseB].forEach(function (el) {
+      el.style.transition = 'none';
+      el.style.opacity    = '0';
+    });
+
+    // Logo at navbar position instantly (no animation)
+    var logo = getLogoSize();
+    var navTx = 20 - logo.w * 0.16;
+    var navTy = 14 - logo.h * 0.16;
+    introLogoEl.style.transition = 'none';
+    introLogoEl.style.opacity    = '1';
+    introLogoEl.style.transform  = 'translate(' + navTx + 'px,' + navTy + 'px) scale(0.68)';
+
+    // Fade intro overlay
+    introEl.classList.add('done');
+    // Show real navbar
+    navbarEl.classList.add('visible');
+    // Block expansion
+    triggerBlockExpansion();
+  }
+
+  skipBtn.addEventListener('click', function () {
+    if (skipped) return;
+    skipped = true;
+    skipResolvers.forEach(function (r) { r(); });
+    skipResolvers = [];
+    finishIntro();
+  });
 
   async function runIntro() {
-    await wait(400);            enterPhrase(P1, '#ffffff');
-    await wait(2200 - 400);     exitPhrase();
+    // ── Phrases
+    await safeWait(400);
+    if (skipped) return;
 
-    await wait(2750 - 2200);    enterPhrase(P2, '#00C8DC');
-    await wait(4500 - 2750);    exitPhrase();
+    showPhrase(phraseA, PHRASES[0]);
+    await safeWait(TRANS_DUR + HOLD_TIME);
+    if (skipped) return;
 
-    await wait(5000 - 4500);    enterPhrase(P3, '#ffffff');
-    await wait(6600 - 5000);    exitPhrase();
+    hidePhrase(phraseA, PHRASES[0]);
+    showPhrase(phraseB, PHRASES[1]);
+    await safeWait(TRANS_DUR + HOLD_TIME);
+    if (skipped) return;
 
-    await wait(7100 - 6600);    introEl.classList.add('done');
-    await wait(7600 - 7100);
+    hidePhrase(phraseB, PHRASES[1]);
+    showPhrase(phraseA, PHRASES[2]);
+    await safeWait(TRANS_DUR + HOLD_TIME);
+    if (skipped) return;
+
+    // ── Logo emerges simultaneously with phrase 3 exiting
+    hidePhrase(phraseA, PHRASES[2]);
+
+    var logo = getLogoSize();
+    var centerTx = W / 2 - logo.w / 2;
+    var centerTy = H / 2 - logo.h / 2;
+
+    introLogoEl.style.transition = 'none';
+    introLogoEl.style.opacity    = '0';
+    introLogoEl.style.transform  = 'translate(' + centerTx + 'px,' + centerTy + 'px) scale(0.65)';
+    introLogoEl.getBoundingClientRect();
+    introLogoEl.style.transition = 'transform 650ms ' + EASE_LOGO_IN + ', opacity 650ms ease';
+    introLogoEl.style.opacity    = '1';
+    introLogoEl.style.transform  = 'translate(' + centerTx + 'px,' + centerTy + 'px) scale(1.0)';
+
+    // ── Hold logo at center
+    await safeWait(650 + HOLD_TIME);
+    if (skipped) return;
+
+    // ── Logo exits to navbar position
+    var navTx = 20 - logo.w * 0.16;
+    var navTy = 14 - logo.h * 0.16;
+    introLogoEl.style.transition = 'transform 900ms ' + EASE_LOGO_OUT;
+    introLogoEl.style.transform  = 'translate(' + navTx + 'px,' + navTy + 'px) scale(0.68)';
+
+    // ── 150ms after logo starts moving: expand blocks
+    await safeWait(150);
+    if (skipped) return;
+
+    introEl.classList.add('done');
     navbarEl.classList.add('visible');
-    gridEl.classList.add('visible');
+    triggerBlockExpansion();
   }
 
   runIntro();

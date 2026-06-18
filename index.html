@@ -18,9 +18,24 @@
 
   <canvas id="bg"></canvas>
 
+  <!-- SKIP BUTTON -->
+  <div id="skip-btn">
+    <div class="skip-sq"></div><div class="skip-sq"></div><div class="skip-sq"></div>
+    <div class="skip-sq"></div><div class="skip-sq"></div><div class="skip-sq"></div>
+  </div>
+
   <!-- INTRO -->
   <div id="intro">
-    <p id="intro-phrase"></p>
+    <p id="intro-phrase-a" class="intro-phrase"></p>
+    <p id="intro-phrase-b" class="intro-phrase"></p>
+  </div>
+
+  <!-- INTRO LOGO (sibling do #intro, z-index 205 — persiste após #intro.done) -->
+  <div id="intro-logo">
+    <div class="wordmark">
+      <span class="wm-arke">ARKE</span><span class="wm-flow">flow</span>
+      <span class="wm-sub">TECH SOLUTIONS</span>
+    </div>
   </div>
 
   <!-- NAV -->
