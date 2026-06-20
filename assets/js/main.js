@@ -242,7 +242,8 @@
   var EASE_LOGO_OUT= 'cubic-bezier(0.4, 0, 0.2, 1)';
   var EASE_BLOCK   = 'cubic-bezier(0.34, 1.2, 0.64, 1)';
 
-  var skipped = false;
+  var skipped       = false;
+  var introComplete = false;
   var skipResolvers = [];
 
   function safeWait(ms) {
@@ -349,6 +350,7 @@
     introLogoEl.style.transform  = 'translate(' + exactTx + 'px, ' + exactTy + 'px) scale(' + exactScale + ')';
     introLogoEl.style.opacity    = '1';
     introLogoEl.style.zIndex     = '100';
+    introComplete = true;
 
     // Fade intro overlay
     introEl.classList.add('done');
@@ -356,6 +358,19 @@
     // Block expansion
     triggerBlockExpansion();
   }
+
+  function repositionLogo() {
+    if (!introComplete) return;
+    var vw  = window.innerWidth;
+    var vh  = window.innerHeight;
+    var nbr = navbarEl.getBoundingClientRect();
+    var exactScale = 20 / 52;
+    var exactTx = (nbr.left + 20) - vw / 2;
+    var exactTy = (nbr.top  + 14) - vh / 2;
+    introLogoEl.style.transition = 'none';
+    introLogoEl.style.transform  = 'translate(' + exactTx + 'px, ' + exactTy + 'px) scale(' + exactScale + ')';
+  }
+  window.addEventListener('resize', repositionLogo, { passive: true });
 
   skipBtn.addEventListener('click', function () {
     if (skipped) return;
@@ -424,6 +439,7 @@
       introLogoEl.style.transition = '';
       introLogoEl.style.zIndex     = '100';
       navbarEl.classList.add('visible');
+      introComplete = true;
     }
     introLogoEl.addEventListener('transitionend', onLogoArrival);
 
