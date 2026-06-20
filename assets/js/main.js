@@ -216,17 +216,17 @@
   var gridEl      = document.getElementById('grid');
 
   var P1 = 'Quando o negócio cresce, o improviso para de funcionar.';
-  var P2 = 'Processo dependente de pessoa. Decisão sem dado. Equipe sem visibilidade.';
   var P3 = 'A ARKEflow constrói a estrutura que o seu negócio precisa para escalar.';
 
   var PHRASES = [
     { text: P1, color: '#ffffff', from: [ 65, -40], to: [-65,  40] },
-    { text: P2, color: '#00C8DC', from: [-60,  50], to: [ 60, -50] },
     { text: P3, color: '#ffffff', from: [  0,  65], to: [  0, -65] }
   ];
 
-  var TRANS_DUR    = 700;
-  var HOLD_TIME    = 4500;
+  var TRANS_DUR       = 700;
+  var HOLD_TIME       = 4000;
+  var LOGO_ENTER_DUR  = 700;
+  var LOGO_HOLD_FINAL = 2000;
   var EASE_PHRASE  = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
   var EASE_LOGO_IN = 'cubic-bezier(0.34, 1.3, 0.64, 1)';
   var EASE_LOGO_OUT= 'cubic-bezier(0.4, 0, 0.2, 1)';
@@ -356,10 +356,22 @@
   });
 
   async function runIntro() {
-    // ── Phrases
+    // ── Initial logo: fade in, hold, fade out
+    introLogoEl.style.transition = 'none';
+    introLogoEl.style.opacity    = '0';
+    introLogoEl.style.transform  = 'translate(-50%, -50%) scale(1)';
+    introLogoEl.getBoundingClientRect(); // force reflow
+    introLogoEl.style.transition = 'opacity 400ms ease';
+    introLogoEl.style.opacity    = '1';
+    await safeWait(1500);
+    if (skipped) return;
+
+    introLogoEl.style.transition = 'opacity 400ms ease';
+    introLogoEl.style.opacity    = '0';
     await safeWait(400);
     if (skipped) return;
 
+    // ── Phrases
     showPhrase(phraseA, PHRASES[0]);
     await safeWait(TRANS_DUR + HOLD_TIME);
     if (skipped) return;
@@ -369,24 +381,19 @@
     await safeWait(TRANS_DUR + HOLD_TIME);
     if (skipped) return;
 
+    // ── Logo emerges simultaneously with phrase 2 exiting
     hidePhrase(phraseB, PHRASES[1]);
-    showPhrase(phraseA, PHRASES[2]);
-    await safeWait(TRANS_DUR + HOLD_TIME);
-    if (skipped) return;
-
-    // ── Logo emerges simultaneously with phrase 3 exiting
-    hidePhrase(phraseA, PHRASES[2]);
 
     introLogoEl.style.transition = 'none';
     introLogoEl.style.opacity    = '0';
     introLogoEl.style.transform  = 'translate(-50%, -50%) scale(0.65)';
     introLogoEl.getBoundingClientRect();
-    introLogoEl.style.transition = 'transform 650ms ' + EASE_LOGO_IN + ', opacity 650ms ease';
+    introLogoEl.style.transition = 'transform ' + LOGO_ENTER_DUR + 'ms ' + EASE_LOGO_IN + ', opacity ' + LOGO_ENTER_DUR + 'ms ease';
     introLogoEl.style.opacity    = '1';
     introLogoEl.style.transform  = 'translate(-50%, -50%) scale(1.0)';
 
     // ── Hold logo at center
-    await safeWait(650 + HOLD_TIME);
+    await safeWait(LOGO_ENTER_DUR + LOGO_HOLD_FINAL);
     if (skipped) return;
 
     // ── Logo slides to navbar position and stays permanently
