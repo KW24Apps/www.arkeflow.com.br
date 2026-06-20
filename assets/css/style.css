@@ -71,9 +71,9 @@ html, body {
   pointer-events: none;
   transform-origin: left top;
 }
-#intro-logo .wm-arke { font-size: 52px; }
-#intro-logo .wm-flow  { font-size: 52px; }
-#intro-logo .wm-sub   { font-size: 11px; letter-spacing: 0.28em; margin-top: 6px; }
+#intro-logo .wm-arke { font-size: calc(52px * var(--scale)); }
+#intro-logo .wm-flow  { font-size: calc(52px * var(--scale)); }
+#intro-logo .wm-sub   { font-size: calc(11px * var(--scale)); letter-spacing: 0.28em; margin-top: 6px; }
 
 @keyframes skip-balloon {
   0%, 100% { transform: scale(1);    opacity: 0.45; }
