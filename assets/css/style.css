@@ -306,43 +306,26 @@ html, body {
 .block[data-r="1"][data-c="2"] { justify-content: flex-start; }
 .block[data-r="1"][data-c="2"] .block-content { margin-top: auto; }
 
-.contact-channels {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px 8px;
-  width: 100%;
-  padding-bottom: 8px;
+.fc-statement {
+  font-size: calc(20px * var(--scale));
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: calc(14px * var(--scale));
 }
-.cc-item {
+.fc-channels {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  opacity: 0.72;
-  transition: opacity 0.3s ease;
+  gap: calc(6px * var(--scale));
+  margin-bottom: calc(14px * var(--scale));
 }
-.block.is-active .cc-item { opacity: 1; }
-.cc-icon {
-  width: 28px;
-  height: 28px;
+.fc-channel-row {
   display: flex;
   align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(38, 255, 147, 0.22);
-  border-radius: 5px;
-  background: rgba(38, 255, 147, 0.05);
-  margin-bottom: 4px;
-}
-.cc-label {
-  font-size: 8px;
-  font-weight: 400;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--steel);
-}
-.cc-value {
-  font-size: 12px;
-  font-weight: 300;
-  color: #C8DDE8;
+  gap: 7px;
+  font-size: calc(11px * var(--scale));
+  color: rgba(255,255,255,0.45);
 }
 
 /* ── Contact block — expanded state ────────────────────────────── */
@@ -352,14 +335,17 @@ html, body {
   inset: 0;
   overflow: hidden;
 }
-.block.is-expanded .contact-channels,
+.block.is-expanded .fc-statement,
+.block.is-expanded .fc-channels,
 .block.is-expanded .qs-statement,
 .block.is-expanded .qs-sep,
 .block.is-expanded .block-content { display: none; }
 .block.is-expanded .contact-expanded { display: flex; }
 
+.contact-expanded .fc-statement { font-size: calc(22px * var(--scale)); }
+
 .ce-left {
-  width: 300px;
+  width: 40%;
   flex-shrink: 0;
   padding: 32px 28px;
   display: flex;
@@ -392,9 +378,9 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(38, 255, 147, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 5px;
-  background: rgba(38, 255, 147, 0.05);
+  background: rgba(255, 255, 255, 0.05);
 }
 .ce-ci-text { display: flex; flex-direction: column; gap: 2px; padding-top: 3px; }
 .ce-ci-label {
@@ -402,12 +388,12 @@ html, body {
   font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--steel);
+  color: rgba(255,255,255,0.3);
 }
 .ce-ci-value {
   font-size: 12px;
-  font-weight: 300;
-  color: #C8DDE8;
+  font-weight: 500;
+  color: rgba(255,255,255,0.65);
   transition: color 0.2s ease;
 }
 a.ce-contact-item {
@@ -416,14 +402,13 @@ a.ce-contact-item {
 }
 a.ce-contact-item:hover .ce-ci-value { color: var(--mint-green); }
 .ce-divider {
-  height: 1px;
-  background: rgba(255, 255, 255, 0.06);
-  margin: 6px 0 14px;
+  border-top: 0.5px solid rgba(255,255,255,0.07);
+  margin: calc(14px * var(--scale)) 0;
 }
 .ce-tagline {
   font-size: 10px;
   font-weight: 300;
-  color: rgba(91, 138, 168, 0.65);
+  color: rgba(255,255,255,0.25);
   font-style: italic;
   margin-top: auto;
   padding-top: 16px;
@@ -468,7 +453,7 @@ a.ce-contact-item:hover .ce-ci-value { color: var(--mint-green); }
 }
 .ce-input::placeholder { color: rgba(91, 138, 168, 0.6); }
 .ce-input:focus { border-color: rgba(38, 255, 147, 0.3); }
-.ce-textarea { height: 72px; resize: none; }
+.ce-textarea { min-height: calc(80px * var(--scale)); resize: none; }
 .ce-pill-row { display: flex; flex-direction: column; gap: 6px; }
 .ce-pill-label {
   font-size: 9px;
@@ -481,19 +466,19 @@ a.ce-contact-item:hover .ce-ci-value { color: var(--mint-green); }
 .ce-pill {
   padding: 5px 12px;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.10);
+  border: 0.5px solid rgba(255, 255, 255, 0.15);
   background: transparent;
   font-family: var(--font);
   font-size: 11px;
   font-weight: 300;
-  color: var(--steel);
+  color: rgba(255,255,255,0.45);
   cursor: pointer;
   transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
 }
 .ce-pill.active {
-  border-color: rgba(38, 255, 147, 0.45);
-  color: var(--mint-green);
-  background: rgba(38, 255, 147, 0.08);
+  border: 1px solid rgba(255,255,255,0.7);
+  color: rgba(255,255,255,0.9);
+  background: transparent;
 }
 .ce-submit {
   padding: 11px 22px;
