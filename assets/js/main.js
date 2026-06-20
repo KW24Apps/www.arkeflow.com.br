@@ -225,8 +225,8 @@
   var navbarEl    = document.getElementById('navbar');
   var gridEl      = document.getElementById('grid');
 
-  var P1 = 'Quando o negócio cresce, o improviso para de funcionar.';
-  var P3 = 'A ARKEflow constrói a estrutura que o seu negócio precisa para escalar.';
+  var P1 = 'Quando o negócio cresce, o <span style="color:#26FF93;font-weight:400">improviso</span> para de funcionar.';
+  var P3 = 'Do processo ao software. <span style="color:#26FF93;font-weight:400">Construído</span> para o seu negócio.';
 
   var PHRASES = [
     { text: P1, color: '#ffffff', from: [ 65, -40], to: [-65,  40] },
@@ -264,7 +264,7 @@
   }
 
   function showPhrase(el, ph) {
-    el.textContent = ph.text;
+    el.innerHTML = ph.text;
     el.style.color = ph.color;
     setPhraseState(el, ph.from[0], ph.from[1], 0, false);
     el.getBoundingClientRect(); // force reflow
