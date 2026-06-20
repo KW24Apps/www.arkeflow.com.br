@@ -52,7 +52,7 @@ html, body {
   margin: auto;
   max-width: 560px;
   height: fit-content;
-  font-size: clamp(20px, 2.6vw, 38px);
+  font-size: clamp(17px, 2.2vw, 32px);
   font-weight: 300;
   text-align: center;
   padding: 0 40px;
@@ -304,6 +304,30 @@ html, body {
     opacity 0.3s ease;
 }
 
+/* ── Modal close button ─────────────────────────────────────────── */
+.modal-close-btn {
+  position: absolute;
+  top: calc(14px * var(--scale));
+  right: calc(14px * var(--scale));
+  width: calc(28px * var(--scale));
+  height: calc(28px * var(--scale));
+  background: rgba(255,255,255,0.06);
+  border: 0.5px solid rgba(255,255,255,0.12);
+  border-radius: 50%;
+  color: rgba(255,255,255,0.5);
+  font-size: calc(16px * var(--scale));
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+}
+.modal-close-btn:hover {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+}
+
 /* ── Contact block — closed state ──────────────────────────────── */
 .block[data-r="1"][data-c="2"] { justify-content: flex-start; }
 .block[data-r="1"][data-c="2"] .block-content { margin-top: auto; }
@@ -344,6 +368,7 @@ html, body {
   position: absolute;
   inset: 0;
   overflow: hidden;
+  align-items: stretch;
 }
 .block.is-expanded .fc-top,
 .block.is-expanded .qs-statement,
@@ -426,6 +451,7 @@ a.ce-contact-item:hover .ce-ci-value { color: var(--mint-green); }
 .ce-right {
   flex: 1;
   min-width: 0;
+  height: 100%;
   padding: 32px 28px;
   display: flex;
   flex-direction: column;
@@ -443,6 +469,7 @@ a.ce-contact-item:hover .ce-ci-value { color: var(--mint-green); }
 .ce-fields {
   display: flex;
   flex-direction: column;
+  flex: 1;
   gap: 10px;
 }
 .ce-row { display: flex; gap: 10px; }
@@ -462,7 +489,7 @@ a.ce-contact-item:hover .ce-ci-value { color: var(--mint-green); }
 }
 .ce-input::placeholder { color: rgba(91, 138, 168, 0.6); }
 .ce-input:focus { border-color: rgba(38, 255, 147, 0.3); }
-.ce-textarea { min-height: calc(80px * var(--scale)); resize: none; }
+.ce-textarea { flex: 1; resize: none; }
 .ce-pill-row { display: flex; flex-direction: column; gap: 6px; }
 .ce-pill-label {
   font-size: 9px;

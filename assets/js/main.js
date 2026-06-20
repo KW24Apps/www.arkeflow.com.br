@@ -597,6 +597,16 @@
         if (b !== el) b.classList.add('is-receded');
       });
       backdrop.classList.add('active');
+
+      var closeBtn = document.createElement('button');
+      closeBtn.className = 'modal-close-btn';
+      closeBtn.innerHTML = '&times;';
+      closeBtn.setAttribute('aria-label', 'Fechar');
+      closeBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        closeExpanded();
+      });
+      el.insertBefore(closeBtn, el.firstChild);
     });
   }
 
@@ -607,6 +617,9 @@
     expandedBlock  = null;
     expandedOrigin = null;
     gridEl.classList.remove('is-expanded-open');
+
+    var existingBtn = el.querySelector('.modal-close-btn');
+    if (existingBtn) el.removeChild(existingBtn);
 
     if (!closingFromPopstate && history.state && history.state.arkeExpanded) {
       history.back();
