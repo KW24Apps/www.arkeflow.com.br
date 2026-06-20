@@ -583,8 +583,8 @@
         expandTop   = 60;
         expandLeft  = 16;
       } else {
-        tw          = Math.min(1300, window.innerWidth  - 140);
-        th          = Math.min(820,  viewportH - 140);
+        tw          = Math.min(1120, window.innerWidth  - 200);
+        th          = Math.min(710,  viewportH - 180);
         expandTop   = (viewportH - th) / 2;
         expandLeft  = (window.innerWidth  - tw) / 2;
       }

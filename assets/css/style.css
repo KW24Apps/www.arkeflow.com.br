@@ -232,7 +232,8 @@ html, body {
   transition: width 0.38s ease;
   pointer-events: none;
 }
-.block.is-active::after { width: 100%; }
+.block.is-active::after   { width: 100%; }
+.block.is-expanded::after { width: 100%; }
 
 /* block content */
 .block-content {
@@ -535,7 +536,7 @@ a.ce-contact-item:hover .ce-ci-value { color: var(--electric-cyan); }
   letter-spacing: -0.03em;
   margin: 0;
 }
-.qs-statement-text span { color: #00C8DC; }
+.qs-statement-text span { color: #26FF93; }
 .qs-sep {
   border-top: 1px solid rgba(255,255,255,0.06);
   margin-bottom: calc(10px * var(--scale));
