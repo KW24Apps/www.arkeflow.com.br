@@ -16,6 +16,41 @@
     <span class="wm-arke">ARKE</span><span class="wm-flow">flow</span>
   </div>
   <div id="app">
+
+  <div id="debug-ruler" style="position:absolute;inset:0;pointer-events:none;z-index:50;">
+    <svg width="100%" height="100%" viewBox="0 0 1366 768" xmlns="http://www.w3.org/2000/svg">
+
+      <!-- TOP: x=683, y=0→288 -->
+      <line x1="683" y1="0"   x2="683" y2="288" stroke="rgba(255,220,0,0.8)" stroke-width="1"/>
+      <line x1="679" y1="0"   x2="687" y2="0"   stroke="rgba(255,220,0,0.8)" stroke-width="1"/>
+      <line x1="679" y1="288" x2="687" y2="288" stroke="rgba(255,220,0,0.8)" stroke-width="1"/>
+      <rect x="659" y="137" width="48" height="15" fill="rgba(0,0,0,0.75)"/>
+      <text x="683" y="149" font-family="monospace" font-size="11" fill="rgba(255,220,0,1)" text-anchor="middle">288px</text>
+
+      <!-- BOTTOM: x=683, y=664→768 -->
+      <line x1="683" y1="664" x2="683" y2="768" stroke="rgba(255,220,0,0.8)" stroke-width="1"/>
+      <line x1="679" y1="664" x2="687" y2="664" stroke="rgba(255,220,0,0.8)" stroke-width="1"/>
+      <line x1="679" y1="768" x2="687" y2="768" stroke="rgba(255,220,0,0.8)" stroke-width="1"/>
+      <rect x="659" y="709" width="48" height="15" fill="rgba(0,0,0,0.75)"/>
+      <text x="683" y="721" font-family="monospace" font-size="11" fill="rgba(255,220,0,1)" text-anchor="middle">104px</text>
+
+      <!-- LEFT: y=400, x=0→220 -->
+      <line x1="0"   y1="400" x2="220" y2="400" stroke="rgba(255,220,0,0.8)" stroke-width="1"/>
+      <line x1="0"   y1="396" x2="0"   y2="404" stroke="rgba(255,220,0,0.8)" stroke-width="1"/>
+      <line x1="220" y1="396" x2="220" y2="404" stroke="rgba(255,220,0,0.8)" stroke-width="1"/>
+      <rect x="86"   y="393" width="48" height="15" fill="rgba(0,0,0,0.75)"/>
+      <text x="110"  y="405" font-family="monospace" font-size="11" fill="rgba(255,220,0,1)" text-anchor="middle">220px</text>
+
+      <!-- RIGHT: y=400, x=1146→1366 -->
+      <line x1="1146" y1="400" x2="1366" y2="400" stroke="rgba(255,220,0,0.8)" stroke-width="1"/>
+      <line x1="1146" y1="396" x2="1146" y2="404" stroke="rgba(255,220,0,0.8)" stroke-width="1"/>
+      <line x1="1366" y1="396" x2="1366" y2="404" stroke="rgba(255,220,0,0.8)" stroke-width="1"/>
+      <rect x="1232"  y="393" width="48" height="15" fill="rgba(0,0,0,0.75)"/>
+      <text x="1256"  y="405" font-family="monospace" font-size="11" fill="rgba(255,220,0,1)" text-anchor="middle">220px</text>
+
+    </svg>
+  </div>
+
   <div id="grid">
 
     <div class="block" data-r="0" data-c="0">
