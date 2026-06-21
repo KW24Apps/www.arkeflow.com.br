@@ -600,11 +600,17 @@
         expandTop   = 60;
         expandLeft  = 16;
       } else {
-        var gridRect = gridEl.getBoundingClientRect();
-        tw          = gridRect.width  * 0.84;
-        th          = gridRect.height * 0.80;
-        expandTop   = gridRect.top  + (gridRect.height - th) / 2;
-        expandLeft  = gridRect.left + (gridRect.width  - tw) / 2;
+        var allBlocks  = gridEl.querySelectorAll('.block');
+        var firstBlock = allBlocks[0].getBoundingClientRect();
+        var lastBlock  = allBlocks[allBlocks.length - 1].getBoundingClientRect();
+        var contentLeft   = firstBlock.left;
+        var contentTop    = firstBlock.top;
+        var contentWidth  = lastBlock.right  - firstBlock.left;
+        var contentHeight = lastBlock.bottom - firstBlock.top;
+        tw          = contentWidth  * 0.92;
+        th          = contentHeight * 0.92;
+        expandLeft  = contentLeft + (contentWidth  - tw) / 2;
+        expandTop   = contentTop  + (contentHeight - th) / 2;
       }
       el.classList.add('is-expanded');
       el.style.top    = expandTop  + 'px';
