@@ -739,7 +739,7 @@ a.ce-contact-item:hover .ce-ci-value { color: var(--mint-green); }
   letter-spacing: 0;
 }
 .ark-exp-header-logo img {
-  max-height: 3em;
+  max-height: 1.4em;
   max-width: 120px;
   width: auto;
   object-fit: contain;
