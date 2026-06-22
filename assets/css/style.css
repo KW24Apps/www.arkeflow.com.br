@@ -310,6 +310,13 @@ html, body {
   .modal-text          { font-size: 12px; line-height: 1.55; }
   .modal-text-italic   { font-size: 10px; }
   #modal-close         { width: 28px; height: 28px; font-size: 16px; }
+  .fc-picker           { width: 280px; padding: 16px; }
+  .fc-input,
+  .fc-dt-btn,
+  .fc-pill,
+  .fc-submit           { font-size: 12px; }
+  .fc-ch-val           { font-size: 13px; }
+  .fc-ch-label         { font-size: 9px; }
 }
 
 /* ── Canvas (full viewport, outside #app) ────────────────── */
@@ -528,4 +535,313 @@ html, body {
   padding-left: calc(8px * var(--scale));
   margin-top: auto;
   line-height: 1.55;
+}
+
+/* ── Block channels (closed state) ──────────────────────── */
+
+.block-channels {
+  display: flex;
+  flex-direction: column;
+  gap: calc(4px * var(--scale));
+  margin-bottom: calc(10px * var(--scale));
+  margin-top: auto;
+}
+
+.block-channel {
+  font-size: calc(10px * var(--scale));
+  color: rgba(255, 255, 255, 0.38);
+}
+
+/* ── Fale conosco — modal left column ────────────────────── */
+
+.fc-channels {
+  display: flex;
+  flex-direction: column;
+  gap: calc(12px * var(--scale));
+  flex: 1;
+}
+
+.fc-ch-item {
+  display: flex;
+  flex-direction: column;
+  gap: calc(2px * var(--scale));
+}
+
+.fc-ch-label {
+  font-size: calc(9px * var(--scale));
+  letter-spacing: 0.10em;
+  color: rgba(255, 255, 255, 0.35);
+  text-transform: uppercase;
+}
+
+.fc-ch-val {
+  font-size: calc(13px * var(--scale));
+  color: #fff;
+}
+
+/* ── Fale conosco — form column ──────────────────────────── */
+
+.fc-form-col {
+  display: flex;
+  flex-direction: column;
+  gap: calc(7px * var(--scale));
+}
+
+.fc-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: calc(7px * var(--scale));
+}
+
+.fc-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 4px;
+  padding: calc(7px * var(--scale)) calc(10px * var(--scale));
+  font-size: calc(12px * var(--scale));
+  color: #fff;
+  font-family: inherit;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.fc-input::placeholder {
+  color: rgba(255, 255, 255, 0.28);
+}
+
+.fc-input-error { border-color: rgba(255, 80, 80, 0.50); }
+.fc-input-ok    { border-color: rgba(38, 255, 147, 0.30); }
+
+.fc-obs {
+  min-height: calc(60px * var(--scale));
+  resize: none;
+  flex: 1;
+}
+
+.fc-dt-btn {
+  text-align: left;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 4px;
+  padding: calc(7px * var(--scale)) calc(10px * var(--scale));
+  font-size: calc(12px * var(--scale));
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.fc-dt-btn--selected {
+  color: #26FF93;
+  border-color: rgba(38, 255, 147, 0.30);
+}
+
+.fc-pills-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: calc(5px * var(--scale));
+}
+
+.fc-pills-label {
+  font-size: calc(9px * var(--scale));
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.fc-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(5px * var(--scale));
+}
+
+.fc-pill {
+  font-size: calc(11px * var(--scale));
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 20px;
+  padding: calc(3px * var(--scale)) calc(10px * var(--scale));
+  color: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  background: transparent;
+  font-family: inherit;
+}
+
+.fc-pill.active {
+  border-color: rgba(255, 255, 255, 0.30);
+  color: #fff;
+}
+
+.fc-submit-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: calc(4px * var(--scale));
+}
+
+.fc-submit {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  border-radius: 4px;
+  padding: calc(7px * var(--scale)) calc(20px * var(--scale));
+  font-size: calc(12px * var(--scale));
+  color: #fff;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  font-family: inherit;
+}
+
+/* ── Fale conosco — date/time picker ─────────────────────── */
+
+.fc-picker-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+}
+
+.fc-picker-overlay.open { display: flex; }
+
+.fc-picker {
+  background: #0D2235;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: calc(18px * var(--scale));
+  width: calc(290px * var(--scale));
+}
+
+.fc-picker-hdr {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: calc(14px * var(--scale));
+}
+
+.fc-picker-hdr span {
+  font-size: calc(13px * var(--scale));
+  font-weight: 700;
+  color: #fff;
+}
+
+.fc-picker-hdr button {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.50);
+  font-size: calc(16px * var(--scale));
+  cursor: pointer;
+}
+
+.fc-cal-dow {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: calc(6px * var(--scale));
+}
+
+.fc-cal-dow span {
+  font-size: calc(9px * var(--scale));
+  color: rgba(255, 255, 255, 0.35);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.fc-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.fc-cal-day {
+  font-size: calc(12px * var(--scale));
+  color: rgba(255, 255, 255, 0.60);
+  text-align: center;
+  padding: calc(6px * var(--scale)) 2px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.fc-cal-day:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.fc-cal-day.empty,
+.fc-cal-day.past {
+  color: rgba(255, 255, 255, 0.18);
+  cursor: default;
+}
+
+.fc-cal-day.past:hover {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.18);
+}
+
+.fc-cal-day.active {
+  background: #26FF93;
+  color: #071828;
+  font-weight: 700;
+}
+
+.fc-back-btn {
+  display: block;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.40);
+  font-size: calc(12px * var(--scale));
+  cursor: pointer;
+  margin-bottom: calc(10px * var(--scale));
+  font-family: inherit;
+}
+
+.fc-slot-date {
+  font-size: calc(12px * var(--scale));
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: calc(10px * var(--scale));
+}
+
+.fc-slots {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: calc(6px * var(--scale));
+}
+
+.fc-slot {
+  font-size: calc(12px * var(--scale));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  padding: calc(7px * var(--scale)) 4px;
+  color: rgba(255, 255, 255, 0.60);
+  text-align: center;
+  cursor: pointer;
+  background: transparent;
+  font-family: inherit;
+}
+
+.fc-slot:hover {
+  border-color: rgba(38, 255, 147, 0.40);
+  color: #26FF93;
+}
+
+.fc-slot.active {
+  border-color: #26FF93;
+  color: #26FF93;
+  background: rgba(38, 255, 147, 0.06);
+}
+
+.fc-confirm-btn {
+  width: 100%;
+  background: #26FF93;
+  border: none;
+  border-radius: 4px;
+  padding: calc(9px * var(--scale));
+  font-size: calc(12px * var(--scale));
+  font-weight: 700;
+  color: #071828;
+  cursor: pointer;
+  margin-top: calc(12px * var(--scale));
+  font-family: inherit;
 }

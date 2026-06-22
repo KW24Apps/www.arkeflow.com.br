@@ -366,6 +366,8 @@
 
   var MODAL_QUEM_SOMOS = '<div class="modal-header"><span class="modal-cat">EMPRESA</span><h2 class="modal-title">Quem somos</h2></div><div class="modal-body modal-two-col"><div class="modal-col"><span class="modal-col-label">A EMPRESA</span><p class="modal-col-statement">Tecnologia que se molda ao negócio,<span style="color:#26FF93"> não o negócio que se molda à tecnologia.</span></p><p class="modal-text">A empresa é nova. A especialidade, não.</p><p class="modal-text">Quase trinta anos de experiência em consultoria e gestão de processos aplicados a cada projeto, em <span style="color:#fff;font-weight:700">Bitrix24</span>, automação e softwares próprios para cada setor.</p><p class="modal-text modal-text-italic">ARKE, do grego arche: origem. O princípio sobre o qual tudo é construído.</p></div><div class="modal-col"><span class="modal-col-label">COMO TRABALHAMOS</span><p class="modal-col-statement">Diagnóstico antes de <span style="color:#26FF93">qualquer solução.</span></p><p class="modal-text">Entendemos o processo, o fluxo e o problema real antes de propor qualquer ferramenta.</p><p class="modal-text">Usamos o que o mercado oferece de melhor e adaptamos o que cada empresa precisa de único. <span style="color:#fff;font-weight:700">Sempre sob medida.</span></p><p class="modal-text">Cada entrega é documentada e transferida com clareza. O objetivo não é vender horas, é garantir que o processo funcione sem depender de nós.</p></div></div>';
 
+  var MODAL_FALE_CONOSCO = '<div class="modal-header"><span class="modal-cat">CONTATO</span><h2 class="modal-title">Fale conosco</h2></div><div class="modal-body modal-two-col"><div class="modal-col"><div class="fc-channels"><div class="fc-ch-item"><div class="fc-ch-label">TELEFONE</div><div class="fc-ch-val">(00) 00000-0000</div></div><div class="fc-ch-item"><div class="fc-ch-label">WHATSAPP</div><div class="fc-ch-val">(00) 00000-0000</div></div><div class="fc-ch-item"><div class="fc-ch-label">INSTAGRAM</div><div class="fc-ch-val">@arkeflow</div></div><div class="fc-ch-item"><div class="fc-ch-label">LINKEDIN</div><div class="fc-ch-val">ARKEflow</div></div></div><p class="modal-text-italic">Fale direto com quem vai construir a solução.</p></div><div class="modal-col fc-form-col"><span class="modal-col-label">Agende uma conversa</span><div class="fc-row"><input class="fc-input" id="fc-nome" placeholder="Nome" autocomplete="off" /><input class="fc-input" id="fc-tel" placeholder="(00) 00000-0000" maxlength="15" autocomplete="off" /></div><div class="fc-row"><input class="fc-input fc-email" id="fc-email" placeholder="E-mail" type="email" autocomplete="off" /><input class="fc-input" id="fc-cnpj" placeholder="00.000.000/0000-00" maxlength="18" autocomplete="off" /></div><button class="fc-dt-btn" id="fc-dt-btn">Escolher data e horário →</button><div class="fc-pills-wrap"><div class="fc-pills-label">Produto de interesse</div><div class="fc-pills"><button type="button" class="fc-pill active">Consultoria Bitrix24</button><button type="button" class="fc-pill">ARKEvest</button><button type="button" class="fc-pill">PDV+</button><button type="button" class="fc-pill">LinkSis</button><button type="button" class="fc-pill">Outros</button></div></div><textarea class="fc-input fc-obs" placeholder="Observações (opcional)"></textarea><div class="fc-submit-row"><button type="button" class="fc-submit">Agendar →</button></div></div></div><div class="fc-picker-overlay" id="fc-picker-overlay"><div class="fc-picker"><div id="fc-cal-view"><div class="fc-picker-hdr"><button id="fc-prev">‹</button><span id="fc-month-label"></span><button id="fc-next">›</button></div><div class="fc-cal-dow"><span>DOM</span><span>SEG</span><span>TER</span><span>QUA</span><span>QUI</span><span>SEX</span><span>SÁB</span></div><div class="fc-cal-grid" id="fc-cal-grid"></div></div><div id="fc-slot-view" style="display:none"><button class="fc-back-btn" id="fc-back-btn">← voltar</button><div class="fc-slot-date" id="fc-slot-date"></div><div class="fc-slots" id="fc-slots"></div><button class="fc-confirm-btn" id="fc-confirm-btn" style="display:none">Confirmar</button></div></div></div>';
+
   function openModal(blockEl) {
     if (modalIsOpen) return;
     modalIsOpen = true;
@@ -376,6 +378,7 @@
     var r = blockEl.dataset.r;
     var c = blockEl.dataset.c;
     if (r === '1' && c === '0') modalContent.innerHTML = MODAL_QUEM_SOMOS;
+    if (r === '1' && c === '2') { modalContent.innerHTML = MODAL_FALE_CONOSCO; initFaleConosco(); }
     modalOverlay.style.transition = 'opacity 320ms ease, transform 320ms ease';
     modalOverlay.classList.add('is-open');
     history.pushState({ arkeModal: true }, '');
@@ -397,6 +400,181 @@
       history.back();
       setTimeout(function () { closingFromHistory = false; }, 100);
     }
+  }
+
+  // ── Fale conosco: init ───────────────────────────────────
+  function initFaleConosco() {
+    var telEl   = document.getElementById('fc-tel');
+    var cnpjEl  = document.getElementById('fc-cnpj');
+    var emailEl = document.getElementById('fc-email');
+    var dtBtn   = document.getElementById('fc-dt-btn');
+    var pickerOverlay = document.getElementById('fc-picker-overlay');
+    var calView = document.getElementById('fc-cal-view');
+    var slotView = document.getElementById('fc-slot-view');
+    var monthLabel = document.getElementById('fc-month-label');
+    var calGrid = document.getElementById('fc-cal-grid');
+    var prevBtn = document.getElementById('fc-prev');
+    var nextBtn = document.getElementById('fc-next');
+    var slotDateEl = document.getElementById('fc-slot-date');
+    var slotsEl = document.getElementById('fc-slots');
+    var confirmBtn = document.getElementById('fc-confirm-btn');
+    var backBtn = document.getElementById('fc-back-btn');
+
+    var MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+                  'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+    var SLOTS  = ['09h00','10h00','11h00','14h00','15h00','16h00','17h00'];
+
+    var now = new Date();
+    var curYear  = now.getFullYear();
+    var curMonth = now.getMonth();
+    var viewYear  = curYear;
+    var viewMonth = curMonth;
+    var selectedDate = null;
+    var selectedSlot = null;
+
+    // Phone mask
+    telEl.addEventListener('input', function () {
+      var d = this.value.replace(/\D/g, '').substring(0, 11);
+      var v = '';
+      if (d.length > 0) {
+        v = '(' + d.substring(0, 2);
+        if (d.length > 2) v += ') ' + d.substring(2, 7);
+        if (d.length > 7) v += '-' + d.substring(7, 11);
+      }
+      this.value = v;
+    });
+
+    // CNPJ mask
+    cnpjEl.addEventListener('input', function () {
+      var d = this.value.replace(/\D/g, '').substring(0, 14);
+      var v = '';
+      if (d.length > 0) {
+        v = d.substring(0, 2);
+        if (d.length > 2)  v += '.' + d.substring(2, 5);
+        if (d.length > 5)  v += '.' + d.substring(5, 8);
+        if (d.length > 8)  v += '/' + d.substring(8, 12);
+        if (d.length > 12) v += '-' + d.substring(12, 14);
+      }
+      this.value = v;
+    });
+
+    // Email validation
+    emailEl.addEventListener('blur', function () {
+      if (!this.value) { this.classList.remove('fc-input-ok', 'fc-input-error'); return; }
+      var ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value);
+      this.classList.toggle('fc-input-ok',    ok);
+      this.classList.toggle('fc-input-error', !ok);
+    });
+    emailEl.addEventListener('focus', function () {
+      this.classList.remove('fc-input-ok', 'fc-input-error');
+    });
+
+    // Pills toggle
+    document.querySelectorAll('.fc-pill').forEach(function (pill) {
+      pill.addEventListener('click', function () {
+        this.classList.toggle('active');
+      });
+    });
+
+    // Calendar rendering
+    function renderCal() {
+      monthLabel.textContent = MONTHS[viewMonth] + ' ' + viewYear;
+      calGrid.innerHTML = '';
+      var firstDay    = new Date(viewYear, viewMonth, 1).getDay();
+      var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+      var today = new Date(); today.setHours(0, 0, 0, 0);
+
+      for (var i = 0; i < firstDay; i++) {
+        var empty = document.createElement('div');
+        empty.className = 'fc-cal-day empty';
+        calGrid.appendChild(empty);
+      }
+
+      for (var d = 1; d <= daysInMonth; d++) {
+        var dayEl   = document.createElement('div');
+        var dayDate = new Date(viewYear, viewMonth, d);
+        dayDate.setHours(0, 0, 0, 0);
+        dayEl.className = 'fc-cal-day' + (dayDate < today ? ' past' : '');
+        dayEl.textContent = d;
+        if (dayDate >= today) {
+          (function (yr, mo, dy) {
+            dayEl.addEventListener('click', function () {
+              selectedDate = new Date(yr, mo, dy);
+              showSlots();
+            });
+          })(viewYear, viewMonth, d);
+        }
+        calGrid.appendChild(dayEl);
+      }
+    }
+
+    // Slot view
+    function showSlots() {
+      calView.style.display  = 'none';
+      slotView.style.display = 'block';
+      confirmBtn.style.display = 'none';
+      selectedSlot = null;
+      var dd = String(selectedDate.getDate()).padStart(2, '0');
+      var mm = String(selectedDate.getMonth() + 1).padStart(2, '0');
+      slotDateEl.textContent = dd + '/' + mm + '/' + selectedDate.getFullYear();
+      slotsEl.innerHTML = '';
+      SLOTS.forEach(function (slot) {
+        var el = document.createElement('div');
+        el.className = 'fc-slot';
+        el.textContent = slot;
+        el.addEventListener('click', function () {
+          document.querySelectorAll('.fc-slot').forEach(function (s) { s.classList.remove('active'); });
+          this.classList.add('active');
+          selectedSlot = slot;
+          confirmBtn.style.display = 'block';
+        });
+        slotsEl.appendChild(el);
+      });
+    }
+
+    // Calendar nav
+    prevBtn.addEventListener('click', function () {
+      if (viewYear === curYear && viewMonth === curMonth) return;
+      viewMonth--;
+      if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+      renderCal();
+    });
+    nextBtn.addEventListener('click', function () {
+      viewMonth++;
+      if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+      renderCal();
+    });
+
+    // Back to calendar
+    backBtn.addEventListener('click', function () {
+      slotView.style.display = 'none';
+      calView.style.display  = 'block';
+    });
+
+    // Confirm selection
+    confirmBtn.addEventListener('click', function () {
+      pickerOverlay.classList.remove('open');
+      var dd = String(selectedDate.getDate()).padStart(2, '0');
+      var mm = String(selectedDate.getMonth() + 1).padStart(2, '0');
+      var yyyy = selectedDate.getFullYear();
+      dtBtn.textContent = '✓ ' + dd + '/' + mm + '/' + yyyy + ' às ' + selectedSlot;
+      dtBtn.classList.add('fc-dt-btn--selected');
+    });
+
+    // Open picker
+    dtBtn.addEventListener('click', function () {
+      calView.style.display  = 'block';
+      slotView.style.display = 'none';
+      pickerOverlay.classList.add('open');
+      renderCal();
+    });
+
+    // Close picker on overlay click
+    pickerOverlay.addEventListener('click', function (e) {
+      if (e.target === pickerOverlay) pickerOverlay.classList.remove('open');
+    });
+
+    renderCal();
   }
 
   // Block click → open modal
