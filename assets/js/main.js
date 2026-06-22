@@ -371,6 +371,7 @@
     modalIsOpen = true;
     resetAll();
     gridEl.classList.add('is-expanded-open');
+    document.getElementById('modal-backdrop').classList.add('is-active');
     modalContent.innerHTML = '';
     var r = blockEl.dataset.r;
     var c = blockEl.dataset.c;
@@ -386,6 +387,7 @@
     modalOverlay.style.transition = 'opacity 220ms ease, transform 220ms ease';
     modalOverlay.classList.remove('is-open');
     gridEl.classList.remove('is-expanded-open');
+    document.getElementById('modal-backdrop').classList.remove('is-active');
     setTimeout(function () {
       modalOverlay.style.transition = '';
       modalContent.innerHTML = '';
@@ -410,6 +412,10 @@
 
   modalOverlay.addEventListener('click', function (e) {
     if (e.target === modalOverlay) closeModal(false);
+  });
+
+  document.getElementById('modal-backdrop').addEventListener('click', function () {
+    closeModal(false);
   });
 
   document.addEventListener('keydown', function (e) {

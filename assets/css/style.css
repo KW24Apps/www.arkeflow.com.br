@@ -217,7 +217,7 @@ html, body {
   background: #0D2235;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 7px;
-  overflow: hidden;
+  overflow: visible;
   opacity: 0;
   pointer-events: none;
   transform: scale(0.96);
@@ -233,17 +233,17 @@ html, body {
 
 #modal-close {
   position: absolute;
-  top: 14px;
-  right: 14px;
-  width: 28px;
-  height: 28px;
+  top: -14px;
+  right: -14px;
+  width: calc(28px * var(--scale));
+  height: calc(28px * var(--scale));
   font-family: inherit;
-  font-size: 14px;
+  font-size: calc(16px * var(--scale));
   line-height: 1;
-  background: rgba(255, 255, 255, 0.06);
-  border: 0.5px solid rgba(255, 255, 255, 0.12);
+  background: #0D2235;
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 50%;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.60);
   cursor: pointer;
   z-index: 30;
   display: flex;
@@ -266,6 +266,17 @@ html, body {
 
 #grid.is-expanded-open .block {
   pointer-events: none;
+}
+
+#modal-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  display: none;
+}
+
+#modal-backdrop.is-active {
+  display: block;
 }
 
 /* ── Mobile ──────────────────────────────────────────────── */
@@ -292,11 +303,13 @@ html, body {
     width: calc(390px - 24px);
     height: calc(844px - 82px);
   }
-  .modal-cat        { font-size: 10px; }
-  .modal-title      { font-size: 20px; }
-  .modal-col-label  { font-size: 10px; }
+  .modal-cat           { font-size: 10px; }
+  .modal-title         { font-size: 17px; }
+  .modal-col-label     { font-size: 10px; }
   .modal-col-statement { font-size: 14px; }
-  .modal-text       { font-size: 12px; line-height: 1.55; }
+  .modal-text          { font-size: 12px; line-height: 1.55; }
+  .modal-text-italic   { font-size: 10px; }
+  #modal-close         { width: 28px; height: 28px; font-size: 16px; }
 }
 
 /* ── Canvas (full viewport, outside #app) ────────────────── */
@@ -424,7 +437,7 @@ html, body {
   width: 100%;
   height: 1px;
   background: rgba(255, 255, 255, 0.10);
-  margin-bottom: calc(12px * var(--scale));
+  margin-bottom: calc(6px * var(--scale));
   flex-shrink: 0;
 }
 
@@ -432,7 +445,7 @@ html, body {
 
 .modal-header {
   flex-shrink: 0;
-  padding: calc(22px * var(--scale)) calc(32px * var(--scale)) calc(18px * var(--scale));
+  padding: calc(16px * var(--scale)) calc(32px * var(--scale)) calc(10px * var(--scale));
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -446,7 +459,7 @@ html, body {
 }
 
 .modal-title {
-  font-size: calc(26px * var(--scale));
+  font-size: calc(17px * var(--scale));
   font-weight: 700;
   color: #fff;
   line-height: 1.2;
@@ -507,7 +520,12 @@ html, body {
 }
 
 .modal-text-italic {
+  font-size: calc(10px * var(--scale));
   font-style: italic;
-  color: rgba(255, 255, 255, 0.40);
+  color: rgba(255, 255, 255, 0.35);
+  border-left: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0;
+  padding-left: calc(8px * var(--scale));
   margin-top: auto;
+  line-height: 1.55;
 }
